@@ -1,14 +1,20 @@
 import 'package:http/http.dart'; // for making HTTP requests
 import 'dart:convert'; // for converting JSON data
+import 'package:intl/intl.dart';
 
 class WorldTime {
   String location; // location name for the UI
   String time = ''; // the time in a specific location
   String flag; // url to an asset flag icon
-  String url; // location url for api endpoint
+  String url; // location url for API endpoint
+  late bool isDaytime; // true or false if daytime or not
 
   // Constructor using named parameters
-  WorldTime({required this.location, required this.flag, required this.url});
+  WorldTime({
+    required this.location,
+    required this.flag,
+    required this.url,
+  });
 
   Future<void> getTime() async {
     try {
@@ -38,7 +44,8 @@ class WorldTime {
         }
 
         // Set the time property
-        time = now.toString();
+        isDaytime = now.hour > 6 && now.hour < 19 ? true : false;
+        time = DateFormat.jm().format(now);
         print('Time in $location: $time');
       } else {
         print('Failed to load data: ${response.statusCode}');

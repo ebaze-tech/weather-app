@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/pages/services/world_time.dart'; // Correct your import path
+import 'package:weather_app/pages/services/world_time.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});
@@ -17,12 +18,18 @@ class _LoadingState extends State<Loading> {
         location: 'Berlin', flag: 'germany.png', url: 'Europe/Berlin');
     await instance.getTime();
 
+    // Navigate to the home screen with the retrieved data
+    Navigator.pushReplacementNamed(context, '/home', arguments: {
+      'location': instance.location,
+      'flag': instance.flag,
+      'time': instance.time,
+      'isDayTime': instance.isDaytime,
+    });
+
     // Update the state to reflect the fetched time
     setState(() {
       time = instance.time;
     });
-
-    print(instance.time);
   }
 
   @override
@@ -34,9 +41,12 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Text(time), // Display the fetched time
+      backgroundColor: Colors.blue[900],
+      body: Center(
+        child: const SpinKitFadingCube(
+          color: Colors.white,
+          size: 100.0,
+        ),
       ),
     );
   }
